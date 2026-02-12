@@ -774,58 +774,64 @@ ul {
     width: 100%;
 }
 
-/* (เผื่อไว้) ถ้าบนมือถืออยากให้เว้นน้อยลง */
+/* ================= RESPONSIVE DESIGN (MOBILE) ================= */
+
+/* สำหรับมือถือและแท็บเล็ต (ความกว้างน้อยกว่า 768px) */
 @media (max-width: 768px) {
+    .site-header .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
     .header-layout {
-        flex-direction: column; /* เปลี่ยนจากเรียงแนวนอนเป็นแนวตั้ง */
+        flex-direction: column; /* เรียง Logo และ Menu เป็นแนวตั้ง */
         gap: 15px;
         text-align: center;
     }
 
     .center-nav ul {
-        flex-wrap: wrap; /* ให้เมนูไหลลงมาบรรทัดใหม่ได้ */
+        flex-wrap: wrap; 
         justify-content: center;
         gap: 10px;
         padding: 0;
     }
 
-    .center-nav ul li a {
-        font-size: 14px; /* ลดขนาดตัวอักษรเมนู */
-    }
-}
-@media (max-width: 480px) {
     .login-section {
-        padding: 20px 10px; /* ลดช่องว่างขอบจอ */
+        padding: 40px 15px; /* ลดระยะขอบบน-ล่าง */
     }
 
     .login-card {
-        padding: 20px;
-        width: 100%; /* ให้การ์ดกว้างเต็มจอ */
-        box-shadow: none; /* เอาเงาออกเพื่อให้ดูสะอาดตาในมือถือ */
+        padding: 25px 20px;
+        width: 100%; /* ให้การ์ดกว้างเต็มพื้นที่จอ */
     }
 
-    .form-group div {
-        flex-direction: column; /* ช่องใส่อีเมลกับปุ่มส่งรหัส ให้ซ้อนกัน */
+    /* จัดการส่วนที่มีปุ่มข้าง Input (เช่น หน้าสมัครสมาชิก) */
+    .form-group div[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 8px !important;
     }
 
     #btnSendCode {
-        width: 100%; /* ให้ปุ่มส่งรหัสกว้างเต็ม */
-        margin-top: 5px;
+        width: 100%;
+        padding: 12px !important;
     }
-    /* ป้องกันรูปภาพล้นจอ */
+}
+
+/* ปรับปรุงรูปภาพสินค้าให้พอดีจอเสมอ */
 img {
     max-width: 100%;
     height: auto;
     display: block;
+    margin: 0 auto;
 }
 
-/* ปรับส่วน Hero Section หรือรายละเอียดสินค้า */
-@media (max-width: 768px) {
-    .product-detail-section { /* สมมติชื่อ class ของส่วนรายละเอียดสินค้า */
-        text-align: center;
+/* ปรับฟอนต์หัวข้อให้เล็กลงเล็กน้อยในมือถือ */
+@media (max-width: 480px) {
+    h2 {
+        font-size: 24px;
     }
     
-    .product-price {
-        font-size: 24px;
+    .brand-logo {
+        font-size: 22px;
     }
 }
