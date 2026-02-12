@@ -773,19 +773,18 @@ ul {
 .header-layout {
     width: 100%;
 }
-/* ================= MOBILE OPTIMIZATION ================= */
-
-/* ปรับปรุงพื้นฐานสำหรับหน้าจอที่กว้างน้อยกว่า 768px (มือถือ/แท็บเล็ต) */
+/* ================= MOBILE OPTIMIZATION (แก้ไขใหม่) ================= */
 @media (max-width: 768px) {
-    /* ขยายขนาดตัวอักษรพื้นฐานเพื่อให้ไม่ต้องเพ่ง */
+    /* ขยายขนาดตัวอักษรให้อ่านง่ายขึ้นในมือถือ */
     body {
         font-size: 16px; 
     }
 
-    /* ปรับ Header ให้เมนูไม่เบียดกัน */
+    /* ปรับเมนู Header ให้เรียงซ้อนกัน ไม่เบียดขอบ */
     .header-layout {
-        flex-direction: column;
-        padding: 10px 0;
+        flex-direction: column !important;
+        padding: 15px 0;
+        gap: 15px;
     }
 
     .center-nav ul {
@@ -793,45 +792,31 @@ ul {
         flex-wrap: wrap;
         justify-content: center;
         gap: 15px;
-        margin-top: 10px;
     }
 
-    /* ปรับ Card ให้กว้างเกือบเต็มจอ และขยายขนาดปุ่ม */
-    .login-section {
-        padding: 20px 15px;
+    /* ขยายส่วน Hero (รูปสินค้าหลัก) ให้ใหญ่เต็มตา */
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+        padding: 0 20px;
     }
 
-    .login-card {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 30px 20px;
-        border-radius: 15px;
+    .product-title {
+        font-size: 28px; /* ลดขนาดหัวข้อลงนิดหน่อยให้พอดีจอ */
     }
 
-    /* ทำให้ช่องกรอกข้อมูล (Input) และปุ่ม (Button) ใหญ่ขึ้น กดง่ายขึ้น */
-    .form-input {
-        height: 50px; /* เพิ่มความสูงช่องกรอก */
-        font-size: 16px !important; /* ป้องกัน iPhone ซูมหน้าจอตอนกรอก */
-    }
-
-    .btn-login, #btnSendCode {
-        height: 55px; /* เพิ่มความสูงปุ่มให้กดง่าย */
-        font-size: 18px;
-        font-weight: 600;
+    /* ปรับปุ่มให้ใหญ่ขึ้น กดง่ายด้วยนิ้วมือ */
+    .btn-primary, .btn-login {
         width: 100%;
-        margin-top: 10px;
-    }
-
-    /* จัดการ Layout ของช่อง Email + ปุ่มส่งรหัส */
-    .form-group div[style*="display: flex"] {
-        flex-direction: column !important;
-        display: flex !important;
+        height: 55px;
+        font-size: 18px;
     }
 }
-
-/* ปรับให้รูปภาพสินค้าดูใหญ่เต็มตาในมือถือ */
+/* คำสั่งบังคับให้รูปภาพทุกรูป (รวมถึงใน Homepage) ไม่ล้นจอ */
 img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
+    max-width: 100%;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
 }
