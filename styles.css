@@ -1,0 +1,783 @@
+/* ================= ตั้งค่า Global ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Kanit', sans-serif;
+    background-color: #ffffff;
+    color: #111111;
+    line-height: 1.6;
+    /* เพิ่ม Flex เพื่อทำ Sticky Footer และจัด Layout หน้า Login */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ส่วนเนื้อหาหลักที่จะขยายเต็มพื้นที่ เพื่อดัน Footer ลงล่าง */
+.main-content {
+    flex: 1;
+}
+
+/* ================= Header ================= */
+.site-header {
+    background-color: #ffffff;
+    border-bottom: 2px solid #000;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-area { flex: 1; }
+
+.brand-logo {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #000;
+}
+
+.center-nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.center-nav ul {
+    display: flex;
+    gap: 30px;
+}
+
+.center-nav a {
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    text-transform: uppercase;
+}
+
+.center-nav a:hover,
+.center-nav a.active {
+    color: #000;
+    border-bottom: 2px solid #000;
+}
+
+.right-actions {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-signin {
+    padding: 8px 20px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+.btn-signin:hover {
+    background-color: #333;
+}
+
+.icon-btn {
+    font-size: 18px;
+    color: #000;
+}
+
+/* ================= Hero Section ================= */
+.hero-section {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.hero-info { flex: 1; }
+
+.product-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.product-desc {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 18px;
+}
+
+.product-price {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    padding: 15px 40px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+}
+
+/* ================= Grid Layout (Shared) ================= */
+.grid-section, .news-section {
+    padding: 60px 0;
+}
+
+.news-section {
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+}
+
+.section-header {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 50px;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.section-header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #000;
+    margin: 10px auto 0;
+}
+
+.product-grid, .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* ================= Card Styling ================= */
+.card {
+    border: 1px solid #eee;
+    background: #fff;
+    transition: 0.3s;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.card:hover {
+    border-color: #000;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    filter: grayscale(20%);
+}
+
+.card:hover img {
+    filter: grayscale(0%);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.product-card {
+    text-align: center;
+}
+
+.product-card h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    min-height: 50px;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.btn-outline {
+    padding: 10px 25px;
+    border: 1px solid #000;
+    background: transparent;
+    color: #000;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-outline:hover {
+    background: #000;
+    color: #fff;
+}
+
+.news-card {
+    text-align: left;
+}
+
+.news-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.news-date {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.news-card h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.news-card .excerpt {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.read-more {
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+/* ================= Footer ================= */
+.site-footer {
+    background-color: #000;
+    color: #fff;
+    padding: 60px 0;
+    margin-top: auto; /* ดัน Footer ลงล่างสุด */
+}
+
+.footer-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-left h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.footer-left p {
+    color: #888;
+    font-size: 14px;
+}
+
+.footer-right {
+    text-align: right;
+}
+
+.footer-right p {
+    color: #ccc;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* ================= LOGIN PAGE STYLES (NEW) ================= */
+.login-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background-color: #fafafa;
+    flex: 1; /* ขยายเต็มพื้นที่ */
+}
+
+.login-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border: 1px solid #eee;
+}
+
+.login-card h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.login-card .sub-text {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    outline: none;
+    font-family: 'Kanit', sans-serif;
+}
+
+.form-input:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+.forgot-pass {
+    text-align: right;
+    margin-bottom: 25px;
+}
+
+.forgot-pass a {
+    text-decoration: none;
+    color: #666;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.forgot-pass a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* ปุ่ม Login (เต็มความกว้าง) */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background-color: #000;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.btn-login:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* เส้นคั่น */
+.divider {
+    margin: 20px 0;
+    position: relative;
+    text-align: center;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #eee;
+}
+
+.divider span {
+    background: #fff;
+    padding: 0 15px;
+    position: relative;
+    color: #999;
+    font-size: 13px;
+}
+
+/* ปุ่มสมัครสมาชิก (เส้นขอบ) */
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    color: #000;
+    border: 2px solid #000;
+}
+
+.btn-register:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+
+/* ================= Responsive ================= */
+@media (max-width: 768px) {
+    .header-layout {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .center-nav ul {
+        gap: 15px;
+        font-size: 14px;
+    }
+
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .product-title {
+        font-size: 28px;
+    }
+
+    .footer-layout {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .footer-right {
+        text-align: center;
+    }
+
+    /* Responsive ส่วน Login */
+    .login-card {
+        padding: 30px 20px;
+    }
+}
+
+/* ================= MODAL & POPUP STYLES ================= */
+
+/* พื้นหลังสีดำจางๆ เต็มจอ */
+.modal-overlay {
+    display: none; /* ซ่อนไว้ก่อน */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 2000; /* ให้ลอยเหนือทุกอย่าง */
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* กล่องข้อความ Pop-up */
+.modal-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    animation: scaleUp 0.3s ease-in-out;
+}
+
+.modal-box h3 {
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.modal-box p {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Animations Keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ================= CSS Success Checkmark Animation ================= */
+/* สร้างเครื่องหมายถูกสีเขียวด้วย CSS ล้วนๆ ไม่ต้องใช้รูปภาพ */
+
+.success-checkmark {
+    width: 80px;
+    height: 115px;
+    margin: 0 auto;
+}
+
+.check-icon {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    border-radius: 50%;
+    box-sizing: content-box;
+    border: 4px solid #4CAF50;
+}
+
+.check-icon::before {
+    top: 3px;
+    left: -2px;
+    width: 30px;
+    transform-origin: 100% 50%;
+    border-radius: 100px 0 0 100px;
+}
+
+.check-icon::after {
+    top: 0;
+    left: 30px;
+    width: 60px;
+    transform-origin: 0 50%;
+    border-radius: 0 100px 100px 0;
+    animation: rotate-circle 4.25s ease-in;
+}
+
+.check-icon::before, .check-icon::after {
+    content: '';
+    height: 100px;
+    position: absolute;
+    background: #FFFFFF;
+    transform: rotate(-45deg);
+}
+
+.icon-line {
+    height: 5px;
+    background-color: #4CAF50;
+    display: block;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 10;
+}
+
+.icon-line.line-tip {
+    top: 46px;
+    left: 14px;
+    width: 25px;
+    transform: rotate(45deg);
+    animation: icon-line-tip 0.75s;
+}
+
+.icon-line.line-long {
+    top: 38px;
+    right: 8px;
+    width: 47px;
+    transform: rotate(-45deg);
+    animation: icon-line-long 0.75s;
+}
+
+.icon-circle {
+    top: -4px;
+    left: -4px;
+    z-index: 10;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: absolute;
+    box-sizing: content-box;
+    border: 4px solid rgba(76, 175, 80, .5);
+}
+
+.icon-fix {
+    top: 8px;
+    width: 5px;
+    height: 85px;
+    background-color: #FFFFFF;
+    position: absolute;
+    left: 28px;
+    transform: rotate(-45deg);
+    z-index: 1;
+}
+
+@keyframes rotate-circle {
+    0% { transform: rotate(-45deg); }
+    5% { transform: rotate(-45deg); }
+    12% { transform: rotate(-405deg); }
+    100% { transform: rotate(-405deg); }
+}
+
+@keyframes icon-line-tip {
+    0% { width: 0; left: 1px; top: 19px; }
+    54% { width: 0; left: 1px; top: 19px; }
+    70% { width: 50px; left: -8px; top: 37px; }
+    84% { width: 17px; left: 21px; top: 48px; }
+    100% { width: 25px; left: 14px; top: 46px; }
+}
+
+@keyframes icon-line-long {
+    0% { width: 0; right: 46px; top: 54px; }
+    65% { width: 0; right: 46px; top: 54px; }
+    84% { width: 55px; right: 0px; top: 35px; }
+    100% { width: 47px; right: 8px; top: 38px; }
+}
+
+/* ================= USER PROFILE & DROPDOWN ================= */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    padding: 5px;
+}
+
+.profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #000; /* สีพื้นหลังรูป */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    border: 2px solid #ddd;
+    overflow: hidden;
+}
+
+.profile-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.username-display {
+    font-weight: 500;
+    font-size: 16px;
+    color: #333;
+}
+
+/* เมนู Dropdown */
+.dropdown-menu {
+    display: none; /* ซ่อนไว้ก่อน */
+    position: absolute;
+    top: 55px;
+    right: 0;
+    background: #fff;
+    width: 200px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    border: 1px solid #eee;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.dropdown-menu.show {
+    display: flex; /* แสดงเมื่อมี class show */
+}
+
+.dropdown-menu a {
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-menu a.logout-btn {
+    color: #ff4d4d; /* สีแดงสำหรับปุ่มออกจากระบบ */
+    font-weight: 500;
+}
+
+/* ================= FORCE HEADER FULL WIDTH ================= */
+/* สั่งให้ Container เฉพาะในส่วน Header ขยายเต็มจอ */
+.site-header .container {
+    max-width: 100%;  /* ปลดล็อคความกว้าง 1200px */
+    padding-left: 40px; /* เว้นระยะห่างจากขอบซ้ายจอ */
+    padding-right: 40px; /* เว้นระยะห่างจากขอบขวาจอ */
+}
+
+/* ปรับให้โลโก้และปุ่มอยู่ชิดขอบสุดจริงๆ */
+.header-layout {
+    width: 100%;
+}
+
+/* (เผื่อไว้) ถ้าบนมือถืออยากให้เว้นน้อยลง */
+@media (max-width: 768px) {
+    .site-header .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

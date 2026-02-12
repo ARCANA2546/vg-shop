@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - VG SHOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <div class="header-layout">
+                <div class="logo-area">
+                    <a href="homepage.html" class="brand-logo">VG SHOP</a>
+                </div>
+                <nav class="center-nav">
+                    <ul>
+                        <li><a href="homepage.html">หน้าหลัก</a></li>
+                        <li><a href="#">ร้านค้า</a></li>
+                        <li><a href="#">การ์ด</a></li>
+                        <li><a href="#">เด็ค</a></li>
+                    </ul>
+                </nav>
+                <div class="right-actions">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="login-section">
+        <div class="login-card">
+            <h2>ยินดีต้อนรับ</h2>
+            <p class="sub-text">กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ</p>
+            
+            <form action="homepage.html">
+                <div class="form-group">
+                    <label for="loginInput">อีเมล หรือ ชื่อผู้ใช้</label>
+                    <input type="text" id="loginInput" class="form-input" placeholder="กรอกอีเมล หรือ ชื่อผู้ใช้" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">รหัสผ่าน</label>
+                    <input type="password" id="password" class="form-input" placeholder="กรอกรหัสผ่าน" required>
+                </div>
+
+                <div class="forgot-pass">
+                    <a href="forgot-password.html">ลืมรหัสผ่าน?</a>
+                </div>
+
+                <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
+            </form>
+
+            <div class="divider">
+                <span>ยังไม่มีบัญชีสมาชิก?</span>
+            </div>
+
+            <a href="signup.html" style="text-decoration: none;">
+                <button type="button" class="btn-register">สมัครสมาชิก</button>
+            </a>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-layout">
+                <div class="footer-left">
+                    <h2>VG SHOP</h2>
+                    <p>ศูนย์รวมการ์ดเกมที่ครบวงจรที่สุด</p>
+                </div>
+                <div class="footer-right">
+                    <p>&copy; 2024 VG Shop. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // ป้องกันการเปลี่ยนหน้าแบบปกติ
+
+        const inputUser = document.getElementById('loginInput').value;
+        const inputPass = document.getElementById('password').value;
+
+        // ดึงข้อมูลที่สมัครไว้
+        const storedUser = JSON.parse(localStorage.getItem('vgUser'));
+
+        if (storedUser && 
+           (inputUser === storedUser.username || inputUser === storedUser.email) && 
+           inputPass === storedUser.password) {
+            
+            // [สำคัญ] บันทึกว่า "ล็อคอินแล้ว"
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // ไปหน้า Homepage (สมมติชื่อ index.html)
+            window.location.href = 'homepage.html'; 
+        } else {
+            alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        }
+    });
+</script>
+
+</body>
+</html>
