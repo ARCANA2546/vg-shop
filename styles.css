@@ -773,65 +773,65 @@ ul {
 .header-layout {
     width: 100%;
 }
+/* ================= MOBILE OPTIMIZATION ================= */
 
-/* ================= RESPONSIVE DESIGN (MOBILE) ================= */
-
-/* สำหรับมือถือและแท็บเล็ต (ความกว้างน้อยกว่า 768px) */
+/* ปรับปรุงพื้นฐานสำหรับหน้าจอที่กว้างน้อยกว่า 768px (มือถือ/แท็บเล็ต) */
 @media (max-width: 768px) {
-    .site-header .container {
-        padding-left: 15px;
-        padding-right: 15px;
+    /* ขยายขนาดตัวอักษรพื้นฐานเพื่อให้ไม่ต้องเพ่ง */
+    body {
+        font-size: 16px; 
     }
 
+    /* ปรับ Header ให้เมนูไม่เบียดกัน */
     .header-layout {
-        flex-direction: column; /* เรียง Logo และ Menu เป็นแนวตั้ง */
-        gap: 15px;
-        text-align: center;
+        flex-direction: column;
+        padding: 10px 0;
     }
 
     .center-nav ul {
-        flex-wrap: wrap; 
+        display: flex;
+        flex-wrap: wrap;
         justify-content: center;
-        gap: 10px;
-        padding: 0;
+        gap: 15px;
+        margin-top: 10px;
     }
 
+    /* ปรับ Card ให้กว้างเกือบเต็มจอ และขยายขนาดปุ่ม */
     .login-section {
-        padding: 40px 15px; /* ลดระยะขอบบน-ล่าง */
+        padding: 20px 15px;
     }
 
     .login-card {
-        padding: 25px 20px;
-        width: 100%; /* ให้การ์ดกว้างเต็มพื้นที่จอ */
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 30px 20px;
+        border-radius: 15px;
     }
 
-    /* จัดการส่วนที่มีปุ่มข้าง Input (เช่น หน้าสมัครสมาชิก) */
+    /* ทำให้ช่องกรอกข้อมูล (Input) และปุ่ม (Button) ใหญ่ขึ้น กดง่ายขึ้น */
+    .form-input {
+        height: 50px; /* เพิ่มความสูงช่องกรอก */
+        font-size: 16px !important; /* ป้องกัน iPhone ซูมหน้าจอตอนกรอก */
+    }
+
+    .btn-login, #btnSendCode {
+        height: 55px; /* เพิ่มความสูงปุ่มให้กดง่าย */
+        font-size: 18px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* จัดการ Layout ของช่อง Email + ปุ่มส่งรหัส */
     .form-group div[style*="display: flex"] {
         flex-direction: column !important;
-        gap: 8px !important;
-    }
-
-    #btnSendCode {
-        width: 100%;
-        padding: 12px !important;
+        display: flex !important;
     }
 }
 
-/* ปรับปรุงรูปภาพสินค้าให้พอดีจอเสมอ */
+/* ปรับให้รูปภาพสินค้าดูใหญ่เต็มตาในมือถือ */
 img {
-    max-width: 100%;
+    width: 100%;
     height: auto;
-    display: block;
-    margin: 0 auto;
-}
-
-/* ปรับฟอนต์หัวข้อให้เล็กลงเล็กน้อยในมือถือ */
-@media (max-width: 480px) {
-    h2 {
-        font-size: 24px;
-    }
-    
-    .brand-logo {
-        font-size: 22px;
-    }
+    object-fit: contain;
 }
