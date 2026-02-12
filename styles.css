@@ -776,8 +776,56 @@ ul {
 
 /* (เผื่อไว้) ถ้าบนมือถืออยากให้เว้นน้อยลง */
 @media (max-width: 768px) {
-    .site-header .container {
-        padding-left: 20px;
-        padding-right: 20px;
+    .header-layout {
+        flex-direction: column; /* เปลี่ยนจากเรียงแนวนอนเป็นแนวตั้ง */
+        gap: 15px;
+        text-align: center;
+    }
+
+    .center-nav ul {
+        flex-wrap: wrap; /* ให้เมนูไหลลงมาบรรทัดใหม่ได้ */
+        justify-content: center;
+        gap: 10px;
+        padding: 0;
+    }
+
+    .center-nav ul li a {
+        font-size: 14px; /* ลดขนาดตัวอักษรเมนู */
+    }
+}
+@media (max-width: 480px) {
+    .login-section {
+        padding: 20px 10px; /* ลดช่องว่างขอบจอ */
+    }
+
+    .login-card {
+        padding: 20px;
+        width: 100%; /* ให้การ์ดกว้างเต็มจอ */
+        box-shadow: none; /* เอาเงาออกเพื่อให้ดูสะอาดตาในมือถือ */
+    }
+
+    .form-group div {
+        flex-direction: column; /* ช่องใส่อีเมลกับปุ่มส่งรหัส ให้ซ้อนกัน */
+    }
+
+    #btnSendCode {
+        width: 100%; /* ให้ปุ่มส่งรหัสกว้างเต็ม */
+        margin-top: 5px;
+    }
+    /* ป้องกันรูปภาพล้นจอ */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ปรับส่วน Hero Section หรือรายละเอียดสินค้า */
+@media (max-width: 768px) {
+    .product-detail-section { /* สมมติชื่อ class ของส่วนรายละเอียดสินค้า */
+        text-align: center;
+    }
+    
+    .product-price {
+        font-size: 24px;
     }
 }
