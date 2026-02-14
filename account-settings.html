@@ -1,19 +1,130 @@
-<section class="login-section">
-    <div class="login-card">
-        <h3>ตั้งค่าบัญชี</h3>
-        <form id="updateProfileForm">
-            <div class="form-group">
-                <label>ชื่อที่แสดง</label>
-                <input type="text" id="new-name" class="form-input" placeholder="ใส่ชื่อใหม่">
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่าบัญชี - VG SHOP</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-layout">
+            <div class="logo-area">
+                <a href="homepage.html" class="brand-logo">VG SHOP</a>
             </div>
-            <div class="form-group">
-                <label>เปลี่ยนรหัสผ่านใหม่</label>
-                <input type="password" id="new-password" class="form-input" placeholder="กรอกรหัสผ่านใหม่">
+            <nav class="center-nav">
+                <ul>
+                    <li><a href="homepage.html">หน้าหลัก</a></li>
+                    <li><a href="#">ร้านค้า</a></li>
+                    <li><a href="#">การ์ด</a></li>
+                    <li><a href="#">เด็ค</a></li>
+                </ul>
+            </nav>
+            <div class="right-actions">
+                <a href="homepage.html" style="font-size: 0.9rem; color: #666;"><i class="fa-solid fa-arrow-left"></i> กลับ</a>
             </div>
-            <button type="submit" class="btn-login">บันทึกการเปลี่ยนแปลง</button>
-        </form>
-        <hr style="margin: 20px 0;">
-        <p><strong>การเชื่อมต่อ:</strong></p>
-        <button class="btn-outline" style="width: 100%; margin-top: 10px;"><i class="fa-brands fa-google"></i> เชื่อมต่อ Google</button>
-    </div>
-</section>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="login-section" style="padding: 50px 0;">
+            <div class="login-card" style="max-width: 500px; margin: 0 auto;">
+                <h3 style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-user-gear"></i> ตั้งค่าบัญชี
+                </h3>
+                <p class="sub-text" style="margin-bottom: 25px;">จัดการข้อมูลส่วนตัวและรหัสผ่านของคุณ</p>
+                
+                <form id="updateProfileForm">
+                    <div class="form-group">
+                        <label for="new-name">ชื่อที่แสดง</label>
+                        <input type="text" id="new-name" class="form-input" placeholder="ใส่ชื่อใหม่ที่ต้องการแสดง">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-password">เปลี่ยนรหัสผ่านใหม่</label>
+                        <input type="password" id="new-password" class="form-input" placeholder="กรอกรหัสผ่านใหม่ (ถ้าต้องการเปลี่ยน)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-new-password">ยืนยันรหัสผ่านใหม่</label>
+                        <input type="password" id="confirm-new-password" class="form-input" placeholder="กรอกรหัสผ่านใหม่อีกครั้ง">
+                    </div>
+
+                    <button type="submit" class="btn-login" style="margin-top: 10px;">บันทึกการเปลี่ยนแปลง</button>
+                </form>
+
+                <div style="margin: 30px 0; border-top: 1px solid #eee; padding-top: 20px;">
+                    <p style="font-weight: 500; margin-bottom: 15px;">การเชื่อมต่อโซเชียล</p>
+                    <button class="btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; border-color: #ddd;">
+                        <img src="https://www.google.com/favicon.ico" width="16" alt="google"> เชื่อมต่อ Google
+                    </button>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="homepage.html" style="color: #666; font-size: 0.9rem;">ยกเลิกและกลับ</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 30px; color: #999; font-size: 0.8rem;">
+        &copy; 2024 VG SHOP. All rights reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, updateProfile, updatePassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // ใส่ Firebase Config ของคุณ
+        const firebaseConfig = {
+            apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
+            authDomain: "vg-shop-c7056.firebaseapp.com",
+            projectId: "vg-shop-c7056",
+            storageBucket: "vg-shop-c7056.firebasestorage.app",
+            messagingSenderId: "630247091832",
+            appId: "1:630247091832:web:d885fe3dfc610501fc478d",
+            measurementId: "G-CDDZVHLC2G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // ตรวจสอบว่าล็อกอินอยู่ไหม ถ้าไม่ให้เด้งไปหน้า sign.html
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'sign.html';
+        });
+
+        document.getElementById('updateProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            const newName = document.getElementById('new-name').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-new-password').value;
+
+            try {
+                // 1. อัปเดตชื่อ
+                if (newName) {
+                    await updateProfile(user, { displayName: newName });
+                }
+
+                // 2. อัปเดตรหัสผ่าน
+                if (newPassword) {
+                    if (newPassword !== confirmPass) {
+                        alert("รหัสผ่านใหม่ไม่ตรงกัน!");
+                        return;
+                    }
+                    await updatePassword(user, newPassword);
+                }
+
+                alert("อัปเดตข้อมูลสำเร็จ!");
+                window.location.reload();
+            } catch (error) {
+                alert("เกิดข้อผิดพลาด: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
