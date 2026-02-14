@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ตั้งค่าการเงิน - VG SHOP</title>
+        <title>เติมเงินเข้าระบบ - VG SHOP</title>
         <link rel="stylesheet" href="styles.css">
         <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -19,53 +19,43 @@
 
         <main class="login-section" style="padding: 40px 0;">
             <div class="login-card" style="max-width: 550px; margin: 0 auto;">
-                <h3><i class="fa-solid fa-wallet"></i> จัดการการชำระเงิน</h3>
-                <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">เลือกผูกบัญชีธนาคาร หรือ พร้อมเพย์</p>
-                
-                <div id="payment-list" style="margin-bottom: 30px;">
-                    <p style="text-align: center; color: #999;">กำลังโหลดข้อมูล...</p>
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h3 style="margin-bottom: 5px;"><i class="fa-solid fa-coins" style="color: #f1c40f;"></i> เติมเงินเพื่อรับพอยท์</h3>
+                    <p style="color: #666; font-size: 0.9rem;">เติมเงินผ่านพร้อมเพย์เพื่อใช้ซื้อสินค้าในร้าน</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h4 style="font-size: 1rem; margin-bottom: 10px;">ประวัติการเติมเงินล่าสุด</h4>
+                    <div id="transaction-list">
+                        <p style="text-align: center; color: #999; font-size: 0.85rem;">กำลังโหลดข้อมูล...</p>
+                    </div>
                 </div>
 
                 <hr style="margin-bottom: 25px; border: 0; border-top: 1px solid #eee;">
 
-                <form id="addPaymentForm">
+                <form id="topupForm">
                     <div class="form-group">
-                        <label>ช่องทางการจ่ายเงิน</label>
-                        <select id="payment-type" class="form-input" onchange="updateFormFields()" style="background: #fff;">
-                            <option value="promptpay">พร้อมเพย์ (PromptPay)</option>
-                            <option value="bank">ธนาคารออนไลน์</option>
-                        </select>
+                        <label>จำนวนเงินที่ต้องการเติม (บาท)</label>
+                        <input type="number" id="topup-amount" class="form-input" placeholder="ระบุจำนวนเงิน เช่น 100" min="1" required oninput="calculatePoints()">
+                        <p style="font-size: 0.85rem; color: #27ae60; margin-top: 5px;">
+                            คุณจะได้รับ: <span id="received-points">0</span> พอยท์
+                        </p>
                     </div>
 
-                    <div id="promptpay-area" style="text-align: center; background: #f0f7ff; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px dashed #0056b3;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0624451412" alt="PromptPay QR Code" style="width: 180px; height: 180px; border-radius: 10px; margin-bottom: 15px;">
-                        <p style="font-weight: 600; color: #0056b3; margin-bottom: 5px;">เบอร์พร้อมเพย์: 062-445-1412</p>
-                        <button type="button" onclick="copyNumber('0624451412')" class="btn-outline" style="font-size: 0.8rem; padding: 5px 15px;">
-                            <i class="fa-solid fa-copy"></i> คัดลอกเบอร์
-                        </button>
-                        <input type="hidden" id="promptpay-number" value="0624451412">
-                    </div>
-
-                    <div id="bank-select-area" class="form-group" style="display: none;">
-                        <label>เลือกธนาคาร</label>
-                        <select id="bank-name" class="form-input">
-                            <option value="กสิกรไทย">กสิกรไทย (K-Bank)</option>
-                            <option value="ไทยพาณิชย์">ไทยพาณิชย์ (SCB)</option>
-                            <option value="กรุงไทย">กรุงไทย (KTB)</option>
-                        </select>
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label>เลขที่บัญชี</label>
-                            <input type="text" id="bank-detail" class="form-input" placeholder="xxx-x-xxxxx-x">
-                        </div>
+                    <div id="promptpay-qr-area" style="text-align: center; background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #0056b3;">
+                        <p style="font-size: 0.85rem; color: #0056b3; margin-bottom: 10px; font-weight: bold;">สแกนผ่านแอปธนาคารทุกแห่ง</p>
+                        <img id="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0624451412" alt="PromptPay QR Code" style="width: 200px; height: 200px; margin-bottom: 10px;">
+                        <p style="font-weight: 600; font-size: 1.1rem; color: #333;">เบอร์พร้อมเพย์: 062-445-1412</p>
+                        <small style="color: #666;">(ยอดเงินที่ต้องโอนจะระบุตามที่คุณกรอกข้างต้น)</small>
                     </div>
 
                     <div class="form-group">
-                        <label>ชื่อผู้ผูกบัญชี / ชื่อเจ้าของ</label>
-                        <input type="text" id="account-owner" class="form-input" placeholder="ระบุชื่อ-นามสกุล" required>
+                        <label>แนบหลักฐาน (เลขอ้างอิงจากสลิป)</label>
+                        <input type="text" id="slip-ref" class="form-input" placeholder="ระบุเลขอ้างอิง 10-18 หลัก" required>
                     </div>
 
                     <button type="submit" class="btn-login" style="background: #000;">
-                        <i class="fa-solid fa-link"></i> ยืนยันการเชื่อมต่อ
+                        <i class="fa-solid fa-check-circle"></i> ยืนยันการเติมเงิน
                     </button>
                 </form>
             </div>
@@ -74,7 +64,7 @@
         <script type="module">
             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
             import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-            import { getFirestore, collection, addDoc, query, where, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+            import { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
             const firebaseConfig = {
                 apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
@@ -90,77 +80,81 @@
             const auth = getAuth(app);
             const db = getFirestore(app);
 
-            // ฟังก์ชันคัดลอกเบอร์
-            window.copyNumber = function(number) {
-                navigator.clipboard.writeText(number);
-                alert("คัดลอกเบอร์ " + number + " แล้ว!");
-            }
-
-            // ปรับการแสดงผลฟอร์ม
-            window.updateFormFields = function() {
-                const type = document.getElementById('payment-type').value;
-                document.getElementById('promptpay-area').style.display = type === 'promptpay' ? 'block' : 'none';
-                document.getElementById('bank-select-area').style.display = type === 'bank' ? 'block' : 'none';
+            // คำนวณพอยท์สดๆ
+            window.calculatePoints = function() {
+                const amount = document.getElementById('topup-amount').value;
+                const points = amount ? parseInt(amount) : 0; // เรท 1:1
+                document.getElementById('received-points').innerText = points.toLocaleString();
+                
+                // ปรับ QR Code ให้แสดงจำนวนเงิน (ถ้าใช้ API ที่รองรับการฝังยอดเงิน)
+                // ตัวอย่างนี้ใช้ qrserver แบบพื้นฐาน
             }
 
             onAuthStateChanged(auth, (user) => {
-                if (user) listenToPayments(user.uid);
+                if (user) listenToTransactions(user.uid);
                 else window.location.href = 'sign.html';
             });
 
-            function listenToPayments(uid) {
-                const q = query(collection(db, "payments"), where("userId", "==", uid));
+            // ดึงประวัติการเติมเงิน (Real-time)
+            function listenToTransactions(uid) {
+                const q = query(
+                    collection(db, "transactions"), 
+                    where("userId", "==", uid),
+                    orderBy("createdAt", "desc"),
+                    limit(5)
+                );
+
                 onSnapshot(q, (snapshot) => {
-                    const list = document.getElementById('payment-list');
+                    const list = document.getElementById('transaction-list');
                     list.innerHTML = "";
+                    
+                    if (snapshot.empty) {
+                        list.innerHTML = '<p style="text-align: center; color: #999; font-size: 0.85rem;">ยังไม่มีประวัติการเติมเงิน</p>';
+                        return;
+                    }
+
                     snapshot.forEach((doc) => {
                         const data = doc.data();
-                        const icon = data.type === 'bank' ? 'fa-building-columns' : 'fa-qrcode';
+                        const date = data.createdAt?.toDate().toLocaleDateString('th-TH');
+                        
                         list.innerHTML += `
-                            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem;">
                                 <div>
-                                    <i class="fa-solid ${icon}" style="margin-right: 10px;"></i>
-                                    <strong>${data.title}</strong> <small style="color: #666;">(${data.owner})</small>
+                                    <i class="fa-solid fa-arrow-up-right-from-square" style="color: #27ae60; margin-right: 8px;"></i>
+                                    <span>เติมเงิน ${data.amount} บาท</span>
+                                    <div style="font-size: 0.75rem; color: #999;">${date} | Ref: ${data.slipRef}</div>
                                 </div>
-                                <button onclick="deletePayment('${doc.id}')" style="color: #ff4d4d; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
+                                <span style="font-weight: bold; color: #27ae60;">+${data.points} P</span>
                             </div>`;
                     });
                 });
             }
 
-            document.getElementById('addPaymentForm').addEventListener('submit', async (e) => {
+            // ส่งข้อมูลเติมเงิน
+            document.getElementById('topupForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const type = document.getElementById('payment-type').value;
-                const owner = document.getElementById('account-owner').value;
-                
-                let paymentData = {
-                    userId: auth.currentUser.uid,
-                    type: type,
-                    owner: owner,
-                    createdAt: new Date()
-                };
-
-                if (type === 'promptpay') {
-                    paymentData.title = "พร้อมเพย์ 062-445-1412";
-                    paymentData.detail = "0624451412";
-                } else {
-                    paymentData.title = document.getElementById('bank-name').value;
-                    paymentData.detail = document.getElementById('bank-detail').value;
-                }
+                const amount = parseInt(document.getElementById('topup-amount').value);
+                const slipRef = document.getElementById('slip-ref').value;
+                const user = auth.currentUser;
 
                 try {
-                    await addDoc(collection(db, "payments"), paymentData);
-                    alert("บันทึกช่องทางชำระเงินเรียบร้อย!");
-                    document.getElementById('addPaymentForm').reset();
-                    updateFormFields();
+                    // บันทึกรายการเติมเงินเข้าคอลเลกชัน transactions
+                    await addDoc(collection(db, "transactions"), {
+                        userId: user.uid,
+                        amount: amount,
+                        points: amount, // 1 บาท = 1 พอยท์
+                        slipRef: slipRef,
+                        status: "pending", // ตั้งสถานะว่ารอตรวจสอบ (หรือสำเร็จทันทีตามต้องการ)
+                        createdAt: new Date()
+                    });
+
+                    alert("ส่งข้อมูลเติมเงินเรียบร้อยแล้ว! พอยท์จะเข้าบัญชีของคุณเร็วๆ นี้");
+                    document.getElementById('topupForm').reset();
+                    document.getElementById('received-points').innerText = "0";
                 } catch (error) {
                     alert("เกิดข้อผิดพลาด: " + error.message);
                 }
             });
-
-            window.deletePayment = async (id) => {
-                if (confirm("ลบช่องทางนี้?")) await deleteDoc(doc(db, "payments", id));
-            }
         </script>
     </body>
 </html>
