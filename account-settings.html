@@ -1,113 +1,147 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ตั้งค่าบัญชี - VG SHOP</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ตั้งค่าบัญชี - VG SHOP</title>
+        <link rel="stylesheet" href="styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </head>
+    <body>
 
-    <header class="site-header">
-        <div class="container header-layout">
-            <div class="logo-area">
+        <header class="site-header">
+            <div class="container header-layout">
                 <a href="homepage.html" class="brand-logo">VG SHOP</a>
+                <a href="account-info.html" style="color: #666;"><i class="fa-solid fa-arrow-left"></i> กลับไปหน้าข้อมูลบัญชี</a>
             </div>
-            <nav class="center-nav">
-                <ul>
-                    <li><a href="homepage.html">หน้าหลัก</a></li>
-                    <li><a href="#">ร้านค้า</a></li>
-                    <li><a href="#">การ์ด</a></li>
-                    <li><a href="#">เด็ค</a></li>
-                </ul>
-            </nav>
-            <div class="right-actions">
-                <a href="homepage.html" style="font-size: 0.9rem; color: #666;"><i class="fa-solid fa-arrow-left"></i> กลับ</a>
-            </div>
-        </div>
-    </header>
+        </header>
 
-    <main class="main-content">
-        <section class="login-section" style="padding: 40px 0;">
+        <main class="login-section" style="padding: 40px 0;">
             <div class="login-card" style="max-width: 500px; margin: 0 auto;">
-                <h2 style="text-align: center; margin-bottom: 10px;"><i class="fa-solid fa-user-gear"></i> ตั้งค่าบัญชี</h2>
-                <p class="sub-text" style="text-align: center; margin-bottom: 30px;">แก้ไขข้อมูลส่วนตัวของคุณ</p>
+                <h2 style="text-align: center;"><i class="fa-solid fa-user-gear"></i> ตั้งค่าบัญชี</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 30px;">จัดการข้อมูลส่วนตัวของคุณ</p>
                 
                 <form id="updateProfileForm">
-                    <div class="form-group">
-                        <label for="new-name">ชื่อที่แสดงใหม่</label>
-                        <input type="text" id="new-name" class="form-input" placeholder="กรอกชื่อที่ต้องการเปลี่ยน">
+                    <div class="form-group" style="text-align: center;">
+                        <img id="current-avatar" src="" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd; display: none; margin: 0 auto 10px;">
+                        <label>URL รูปโปรไฟล์ใหม่</label>
+                        <input type="text" id="new-photo-url" class="form-input" placeholder="วางลิงก์รูปภาพ (เช่นจาก Google Drive หรือเว็บฝากรูป)">
                     </div>
 
                     <div class="form-group">
-                        <label for="new-password">เปลี่ยนรหัสผ่านใหม่ (ระบุเมื่อต้องการเปลี่ยนเท่านั้น)</label>
-                        <input type="password" id="new-password" class="form-input" placeholder="รหัสผ่านใหม่">
+                        <label>ชื่อผู้ใช้งาน (Username)</label>
+                        <input type="text" id="new-name" class="form-input" placeholder="ใส่ชื่อใหม่ที่ต้องการ">
                     </div>
 
-                    <div class="form-group">
-                        <label for="confirm-new-password">ยืนยันรหัสผ่านใหม่</label>
-                        <input type="password" id="confirm-new-password" class="form-input" placeholder="ยืนยันรหัสผ่านใหม่">
+                    <div style="background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 20px;">
+                        <label style="font-weight: 600; font-size: 0.9rem; color: #555;">เปลี่ยนรหัสผ่าน</label>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <input type="password" id="new-password" class="form-input" placeholder="รหัสผ่านใหม่">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="confirm-new-password" class="form-input" placeholder="ยืนยันรหัสผ่านใหม่">
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn-login" style="margin-top: 20px;">บันทึกการเปลี่ยนแปลง</button>
+                    <button type="submit" class="btn-login" style="background: #000;">บันทึกข้อมูลทั้งหมด</button>
                 </form>
 
                 <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
-                
-                <div class="social-connect">
-                    <p style="font-weight: 500; margin-bottom: 15px;">การเชื่อมต่อแอปอื่น</p>
-                    <button class="btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; border-color: #ddd;">
-                        <img src="https://www.google.com/favicon.ico" width="16" alt="google"> เชื่อมต่อ Google
-                    </button>
+
+                <div id="verification-section" style="text-align: center;">
+                    <p style="font-size: 0.9rem; margin-bottom: 10px;">สถานะการยืนยันอีเมล: <span id="verify-status">กำลังโหลด...</span></p>
+                    <button id="sendVerifyEmail" class="btn-outline" style="width: 100%; display: none;">ส่งอีเมลยืนยันตัวตนอีกครั้ง</button>
                 </div>
             </div>
-        </section>
-    </main>
+        </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+            import { getAuth, onAuthStateChanged, updateProfile, updatePassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // ใช้ Config เดียวกับหน้า homepage.html
-        const firebaseConfig = {
-            apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
-            authDomain: "vg-shop-c7056.firebaseapp.com",
-            projectId: "vg-shop-c7056",
-            storageBucket: "vg-shop-c7056.firebasestorage.app",
-            messagingSenderId: "630247091832",
-            appId: "1:630247091832:web:d885fe3dfc610501fc478d",
-            measurementId: "G-CDDZVHLC2G"
-        };
+            const firebaseConfig = {
+                apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
+                authDomain: "vg-shop-c7056.firebaseapp.com",
+                projectId: "vg-shop-c7056",
+                storageBucket: "vg-shop-c7056.firebasestorage.app",
+                messagingSenderId: "630247091832",
+                appId: "1:630247091832:web:d885fe3dfc610501fc478d",
+                measurementId: "G-CDDZVHLC2G"
+            };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
 
-        // เช็คว่าล็อกอินอยู่จริงไหม
-        onAuthStateChanged(auth, (user) => {
-            if (!user) window.location.href = 'sign.html';
-        });
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // โหลดข้อมูลปัจจุบันมาโชว์ใน Placeholder
+                    document.getElementById('new-name').value = user.displayName || "";
+                    document.getElementById('new-photo-url').value = user.photoURL || "";
+                    
+                    if(user.photoURL) {
+                        const avatarImg = document.getElementById('current-avatar');
+                        avatarImg.src = user.photoURL;
+                        avatarImg.style.display = 'block';
+                    }
 
-        document.getElementById('updateProfileForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = auth.currentUser;
-            const newName = document.getElementById('new-name').value;
-            const newPass = document.getElementById('new-password').value;
-            const confirmPass = document.getElementById('confirm-new-password').value;
-
-            try {
-                if (newName) await updateProfile(user, { displayName: newName });
-                if (newPass) {
-                    if (newPass !== confirmPass) return alert("รหัสผ่านไม่ตรงกัน!");
-                    await updatePassword(user, newPass);
+                    // เช็คสถานะยืนยันตัวตน
+                    const verifyStatus = document.getElementById('verify-status');
+                    const verifyBtn = document.getElementById('sendVerifyEmail');
+                    
+                    if (user.emailVerified) {
+                        verifyStatus.innerHTML = '<span style="color: green;">ยืนยันแล้ว</span>';
+                        verifyBtn.style.display = 'none';
+                    } else {
+                        verifyStatus.innerHTML = '<span style="color: red;">ยังไม่ได้ยืนยัน</span>';
+                        verifyBtn.style.display = 'block';
+                    }
+                } else {
+                    window.location.href = 'sign.html';
                 }
-                alert("บันทึกข้อมูลสำเร็จ!");
-                window.location.reload();
-            } catch (err) {
-                alert("ผิดพลาด: " + err.message);
-            }
-        });
-    </script>
-</body>
+            });
+
+            // ฟังก์ชันบันทึกข้อมูล
+            document.getElementById('updateProfileForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const user = auth.currentUser;
+                const newName = document.getElementById('new-name').value;
+                const newPhoto = document.getElementById('new-photo-url').value;
+                const newPass = document.getElementById('new-password').value;
+                const confirmPass = document.getElementById('confirm-new-password').value;
+
+                try {
+                    // 1. อัปเดตโปรไฟล์ (ชื่อและรูป)
+                    await updateProfile(user, {
+                        displayName: newName,
+                        photoURL: newPhoto
+                    });
+
+                    // 2. อัปเดตรหัสผ่าน (ถ้ามีการกรอก)
+                    if (newPass) {
+                        if (newPass !== confirmPass) {
+                            alert("รหัสผ่านใหม่ไม่ตรงกัน!");
+                            return;
+                        }
+                        await updatePassword(user, newPass);
+                    }
+
+                    alert("อัปเดตข้อมูลสำเร็จ!");
+                    window.location.href = 'account-info.html';
+                } catch (error) {
+                    alert("เกิดข้อผิดพลาด: " + error.message);
+                }
+            });
+
+            // ฟังก์ชันส่งอีเมลยืนยันตัวตน
+            document.getElementById('sendVerifyEmail').addEventListener('click', async () => {
+                try {
+                    await sendEmailVerification(auth.currentUser);
+                    alert("ส่งอีเมลยืนยันตัวตนไปที่ " + auth.currentUser.email + " แล้ว กรุณาตรวจสอบในกล่องจดหมายของคุณ");
+                } catch (error) {
+                    alert("ไม่สามารถส่งอีเมลได้: " + error.message);
+                }
+            });
+        </script>
+    </body>
 </html>
