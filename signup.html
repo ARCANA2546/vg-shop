@@ -118,7 +118,7 @@
             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
             import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-            // 2. ใส่ค่า Config จริงของคุณที่คัดลอกมา (ผมใส่ตามรูปที่คุณเคยส่งมาให้)
+            // 2. ใส่ค่า Config จริงของคุณ
             const firebaseConfig = {
                 apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
                 authDomain: "vg-shop-c7056.firebaseapp.com",
@@ -129,34 +129,36 @@
                 measurementId: "G-CDDZVHLC2G"
             };
 
+            // Initialize Firebase ครั้งเดียวพอครับ
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
 
             let generatedOTP = "";
 
-            // 3. แก้ไขให้ปุ่ม "ส่งรหัส" มองเห็นฟังก์ชันนี้ (ใช้ window.)
+            // 3. หัวใจสำคัญ: ต้องใช้ window. นำหน้าชื่อฟังก์ชันเพื่อให้ปุ่มกดมองเห็น
             window.sendOTP = function() {
                 const email = document.getElementById('email').value;
                 if (!email) {
-                    alert("กรุณากรอกอีเมลก่อน!");
+                    alert("กรุณากรอกอีเมลก่อนส่งรหัส!");
                     return;
                 }
 
+                // สร้างเลข 6 หลัก
                 generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
-                // ส่งผ่าน EmailJS
+                // สั่ง EmailJS ทำงาน
                 emailjs.send("service_x8fexol", "template_a0352y9", {
                     user_email: email,
                     otp_code: generatedOTP,
                 }).then(() => {
-                    alert("ส่งรหัส OTP เรียบร้อย! ตรวจสอบที่อีเมลของคุณ");
+                    alert("ส่งรหัส OTP เรียบร้อย! ตรวจสอบที่อีเมลของคุณนะครับ");
                 }).catch((err) => {
-                    alert("เกิดข้อผิดพลาดในการส่งอีเมล");
+                    alert("ส่งอีเมลไม่สำเร็จ เช็คโควตา EmailJS หรือค่ารหัสต่างๆ อีกครั้ง");
                     console.error(err);
                 });
             }
 
-            // 4. ฟังก์ชันสมัครสมาชิก
+            // 4. ส่วนสมัครสมาชิก (ทำงานเมื่อกด Submit Form)
             document.getElementById('signupForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('email').value;
@@ -175,13 +177,13 @@
                 }
 
                 try {
-                    // บันทึกข้อมูลลง Firebase
+                    // บันทึกเข้า Firebase ออนไลน์
                     await createUserWithEmailAndPassword(auth, email, password);
                     
                     // แสดง Modal สำเร็จ
                     document.getElementById('successModal').style.display = 'flex';
                     
-                    // เริ่มนับถอยหลัง
+                    // เริ่มนับถอยหลังไปหน้าล็อกอิน
                     let timeLeft = 5;
                     const timerElement = document.getElementById('timer');
                     const interval = setInterval(() => {
