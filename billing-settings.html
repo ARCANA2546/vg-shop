@@ -37,7 +37,7 @@
                         </select>
                     </div>
 
-                    <div id="app-options" style="display: none; background: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <div id="app-options" style="display: none; background: #f9f9f9; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 20px;">
                         <div class="form-group">
                             <label>เลือกแอปพลิเคชัน</label>
                             <select id="wallet-app" class="form-input">
@@ -46,23 +46,32 @@
                                 <option value="Rabbit LINE Pay">Rabbit LINE Pay</option>
                             </select>
                         </div>
+
                         <div class="form-group">
-                            <label>รหัสยืนยัน (กดขอรหัสเพื่อจำลองการส่ง)</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="text" id="otp-code" class="form-input" placeholder="กรอกรหัส 6 หลัก">
-                                <button type="button" onclick="requestOTP()" style="white-space: nowrap; padding: 0 15px; background: #555; color: #fff; border: none; border-radius: 8px; cursor: pointer;">ขอรหัส</button>
-                            </div>
-                            <small style="color: #666;">*ทดสอบให้กรอก: 123456</small>
+                            <label>เบอร์โทรศัพท์ หรือ อีเมลที่เชื่อมต่อ</label>
+                            <input type="text" id="contact-info" class="form-input" placeholder="08x-xxx-xxxx หรือ email@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" id="btn-send-real-otp" class="btn-outline" style="width: 100%; border-color: #000;">
+                                <i class="fa-solid fa-paper-plane"></i> ส่งรหัสยืนยันไปยังข้อมูลข้างต้น
+                            </button>
+                        </div>
+
+                        <div id="otp-input-area" style="display: none;">
+                            <label>กรอกรหัสยืนยันที่ได้รับ</label>
+                            <input type="text" id="real-otp-code" class="form-input" placeholder="กรอกรหัสจากระบบ">
+                            <small id="otp-timer" style="color: #d9534f;"></small>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label id="detail-label">รายละเอียดบัตร/ธนาคาร</label>
-                        <input type="text" id="payment-detail" class="form-input" placeholder="ระบุเลขบัญชี หรือ เบอร์โทรศัพท์" required>
+                    <div id="general-detail" class="form-group">
+                        <label>รายละเอียด (เลขบัตร หรือ เลขบัญชี)</label>
+                        <input type="text" id="payment-detail" class="form-input" placeholder="ระบุข้อมูล">
                     </div>
 
-                    <button type="submit" class="btn-login" style="background: #222;">
-                        <i class="fa-solid fa-plus"></i> เพิ่มวิธีการชำระเงิน
+                    <button type="submit" class="btn-login" style="background: #000;">
+                        <i class="fa-solid fa-plus"></i> บันทึกข้อมูล
                     </button>
                 </form>
             </div>
@@ -87,26 +96,38 @@
             const auth = getAuth(app);
             const db = getFirestore(app);
 
-            // ฟังก์ชันแสดง/ซ่อน ตัวเลือกแอป
+            let generatedOTP = null;
+
             window.toggleAppOptions = function() {
                 const type = document.getElementById('payment-type').value;
                 const appDiv = document.getElementById('app-options');
-                const label = document.getElementById('detail-label');
+                const generalDiv = document.getElementById('general-detail');
                 
                 if (type === 'e-wallet') {
                     appDiv.style.display = 'block';
-                    label.innerText = 'เบอร์โทรศัพท์ที่ผูกกับแอป';
+                    generalDiv.style.display = 'none';
                 } else {
                     appDiv.style.display = 'none';
-                    label.innerText = 'รายละเอียด (เลขบัตร/เลขบัญชี)';
+                    generalDiv.style.display = 'block';
                 }
             }
 
-            // จำลองการขอ OTP
-            window.requestOTP = function() {
-                const appName = document.getElementById('wallet-app').value;
-                alert("ระบบได้ส่งรหัสยืนยันไปยังแอป " + appName + " ของคุณแล้ว (รหัสทดสอบคือ 123456)");
-            }
+            // ฟังก์ชันส่งรหัสแบบ "จำลองการส่งจริง" 
+            // Note: ในระดับเริ่มต้น เราจะใช้การสร้างรหัสสุ่มและแจ้งเตือนเพื่อให้คุณเห็น Workflow 
+            // หากต้องการส่ง SMS จริง ต้องใช้ API ของ Twilio หรือ ThaiBulkSMS เพิ่มเติม
+            document.getElementById('btn-send-real-otp').addEventListener('click', () => {
+                const contact = document.getElementById('contact-info').value;
+                if (!contact) return alert("กรุณากรอกเบอร์หรืออีเมลก่อน!");
+
+                // สุ่มรหัส 6 หลัก
+                generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                
+                // แสดงส่วนกรอกรหัส
+                document.getElementById('otp-input-area').style.display = 'block';
+                
+                // ในสถานการณ์จริง ตรงนี้จะเรียก API ส่ง SMS
+                alert(`[VG SHOP] ระบบได้ส่งรหัส ${generatedOTP} ไปยัง ${contact} เรียบร้อยแล้ว (โปรดตรวจสอบข้อความของคุณ)`);
+            });
 
             onAuthStateChanged(auth, (user) => {
                 if (user) listenToPayments(user.uid);
@@ -116,12 +137,12 @@
             function listenToPayments(uid) {
                 const q = query(collection(db, "payments"), where("userId", "==", uid));
                 onSnapshot(q, (snapshot) => {
-                    const paymentList = document.getElementById('payment-list');
-                    paymentList.innerHTML = "";
+                    const list = document.getElementById('payment-list');
+                    list.innerHTML = "";
                     snapshot.forEach((doc) => {
                         const data = doc.data();
-                        let icon = data.type === 'bank' ? 'fa-building-columns' : (data.type === 'e-wallet' ? 'fa-wallet' : 'fa-credit-card');
-                        paymentList.innerHTML += `
+                        let icon = data.type === 'bank' ? 'fa-building-columns' : (data.type === 'e-wallet' ? 'fa-mobile' : 'fa-credit-card');
+                        list.innerHTML += `
                             <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: #fff;">
                                 <div><i class="fa-solid ${icon}"></i> <strong>${data.appName || ''}</strong> ${data.detail}</div>
                                 <button onclick="deletePayment('${doc.id}')" style="color: #ff4d4d; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
@@ -133,27 +154,28 @@
             document.getElementById('addPaymentForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const type = document.getElementById('payment-type').value;
-                const detail = document.getElementById('payment-detail').value;
-                const otp = document.getElementById('otp-code').value;
-                const appName = document.getElementById('wallet-app').value;
+                const otpInput = document.getElementById('real-otp-code').value;
 
-                // ตรวจสอบ OTP ถ้าเป็น E-Wallet
-                if (type === 'e-wallet' && otp !== '123456') {
-                    alert("รหัสยืนยันไม่ถูกต้อง!");
-                    return;
+                // ตรวจสอบรหัสที่ได้รับจริง
+                if (type === 'e-wallet') {
+                    if (!generatedOTP || otpInput !== generatedOTP) {
+                        alert("รหัสยืนยันไม่ถูกต้อง หรือยังไม่ได้ขอรหัส!");
+                        return;
+                    }
                 }
+
+                const detail = type === 'e-wallet' ? document.getElementById('contact-info').value : document.getElementById('payment-detail').value;
 
                 try {
                     await addDoc(collection(db, "payments"), {
                         userId: auth.currentUser.uid,
                         type: type,
-                        appName: type === 'e-wallet' ? appName : '',
+                        appName: type === 'e-wallet' ? document.getElementById('wallet-app').value : '',
                         detail: detail,
                         createdAt: new Date()
                     });
-                    alert("เพิ่มวิธีการชำระเงินสำเร็จ!");
-                    document.getElementById('addPaymentForm').reset();
-                    toggleAppOptions();
+                    alert("บันทึกวิธีการชำระเงินสำเร็จ!");
+                    location.reload();
                 } catch (error) {
                     alert("Error: " + error.message);
                 }
