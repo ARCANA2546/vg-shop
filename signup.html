@@ -57,7 +57,7 @@
 
                     <div class="form-group">
                         <label for="verifyCode">รหัสยืนยัน (จากอีเมล) <span style="color:red">*</span></label>
-                        <input type="text" id="verifyCode" class="form-input" placeholder="กรอกรหัส 6 หลัก" maxlength="6" required>
+                        <input type="text" id="otp" class="form-input" placeholder="กรอกรหัส 6 หลัก" maxlength="6" required>
                     </div>
                     
                     <div class="form-group">
@@ -108,17 +108,15 @@
                     </div>
                 </div>
                 <h3>สมัครสมาชิกเรียบร้อย!</h3>
-                <p>ระบบจะพาคุณไปหน้าเข้าสู่ระบบใน <span id="countdownTimer" style="font-weight:bold; color:#000;">3</span> วินาที...</p>
+                <p>ระบบจะพาคุณไปหน้าเข้าสู่ระบบใน <span id="timer" style="font-weight:bold; color:#000;">3</span> วินาที...</p>
                 <button class="btn-login" onclick="closeModal()" style="margin-top: 20px; width: auto; padding-left: 30px; padding-right: 30px;">ไปหน้าเข้าสู่ระบบทันที</button>
             </div>
         </div>
 
         <script type="module">
-            // 1. นำเข้า Firebase SDK
             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
             import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-            // 2. ใส่ค่า Config จริงของคุณ
             const firebaseConfig = {
                 apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
                 authDomain: "vg-shop-c7056.firebaseapp.com",
@@ -129,42 +127,40 @@
                 measurementId: "G-CDDZVHLC2G"
             };
 
-            // Initialize Firebase ครั้งเดียวพอครับ
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
 
             let generatedOTP = "";
 
-            // 3. หัวใจสำคัญ: ต้องใช้ window. นำหน้าชื่อฟังก์ชันเพื่อให้ปุ่มกดมองเห็น
+            // ฟังก์ชันส่ง OTP (ผูกกับ window เพื่อให้ปุ่มมองเห็น)
             window.sendOTP = function() {
                 const email = document.getElementById('email').value;
                 if (!email) {
-                    alert("กรุณากรอกอีเมลก่อนส่งรหัส!");
+                    alert("กรุณากรอกอีเมลก่อน!");
                     return;
                 }
 
-                // สร้างเลข 6 หลัก
                 generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
-                // สั่ง EmailJS ทำงาน
+                // ใช้ Service ID: service_v7ku20q ตามในรูป dashboard ของคุณ
                 emailjs.send("service_v7ku20q", "template_bqbbmxo", {
                     user_email: email,
                     otp_code: generatedOTP,
                 }).then(() => {
-                    alert("ส่งรหัส OTP เรียบร้อย! ตรวจสอบที่อีเมลของคุณนะครับ");
+                    alert("ส่งรหัส OTP เรียบร้อย! ตรวจสอบที่อีเมลของคุณ");
                 }).catch((err) => {
-                    alert("ส่งอีเมลไม่สำเร็จ เช็คโควตา EmailJS หรือค่ารหัสต่างๆ อีกครั้ง");
-                    console.error(err);
+                    alert("เกิดข้อผิดพลาดในการส่งอีเมล: " + JSON.stringify(err));
                 });
             }
 
-            // 4. ส่วนสมัครสมาชิก (ทำงานเมื่อกด Submit Form)
+            // ฟังก์ชันสมัครสมาชิก
             document.getElementById('signupForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
-                const userOTP = document.getElementById('otp').value;
+                const userOTP = document.getElementById('otp').value; // ตรวจสอบ ID นี้ให้ตรงกับ HTML
 
                 if (password !== confirmPassword) {
                     alert("รหัสผ่านไม่ตรงกัน!");
@@ -177,18 +173,18 @@
                 }
 
                 try {
-                    // บันทึกเข้า Firebase ออนไลน์
+                    // บันทึกข้อมูลลง Firebase
                     await createUserWithEmailAndPassword(auth, email, password);
                     
                     // แสดง Modal สำเร็จ
                     document.getElementById('successModal').style.display = 'flex';
                     
-                    // เริ่มนับถอยหลังไปหน้าล็อกอิน
+                    // เริ่มนับถอยหลัง
                     let timeLeft = 5;
                     const timerElement = document.getElementById('timer');
                     const interval = setInterval(() => {
                         timeLeft--;
-                        timerElement.innerText = timeLeft;
+                        if(timerElement) timerElement.innerText = timeLeft;
                         if (timeLeft <= 0) {
                             clearInterval(interval);
                             window.location.href = 'sign.html';
@@ -196,9 +192,14 @@
                     }, 1000);
 
                 } catch (error) {
-                    alert("ผิดพลาด: " + error.message);
+                    alert("สมัครสมาชิกไม่สำเร็จ: " + error.message);
                 }
             });
+
+            // ฟังก์ชันปิด Modal
+            window.closeModal = function() {
+                window.location.href = 'sign.html';
+            }
         </script>
     </body>
 </html>
