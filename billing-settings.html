@@ -1,15 +1,147 @@
-<div class="login-card">
-    <h3><i class="fa-solid fa-wallet"></i> จัดการวิธีการชำระเงิน</h3>
-    <div id="card-list" style="margin: 20px 0;">
-        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div>
-                <i class="fa-brands fa-cc-visa" style="font-size: 24px;"></i>
-                <span style="margin-left: 10px;">**** **** **** 4567</span>
+<!DOCTYPE html>
+<html lang="th">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ตั้งค่าการเงิน - VG SHOP</title>
+        <link rel="stylesheet" href="styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </head>
+    <body>
+
+        <header class="site-header">
+            <div class="container header-layout">
+                <a href="homepage.html" class="brand-logo">VG SHOP</a>
+                <a href="homepage.html" style="color: #666;"><i class="fa-solid fa-house"></i> กลับหน้าหลัก</a>
             </div>
-            <button style="color: red; background: none; border: none; cursor: pointer;">ลบ</button>
-        </div>
-    </div>
-    
-    <button class="btn-login" style="background: #222;"><i class="fa-solid fa-plus"></i> เพิ่มบัตรใหม่</button>
-    <a href="homepage.html" style="display: block; text-align: center; margin-top: 15px; color: #666;">ยกเลิก</a>
-</div>
+        </header>
+
+        <main class="login-section" style="padding: 40px 0;">
+            <div class="login-card" style="max-width: 550px; margin: 0 auto;">
+                <h3><i class="fa-solid fa-wallet"></i> จัดการวิธีการชำระเงิน</h3>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">เพิ่มหรือลบบัตรและบัญชีธนาคารของคุณ</p>
+
+                <div id="payment-list" style="margin-bottom: 30px;">
+                    <p style="text-align: center; color: #999;">กำลังโหลดข้อมูล...</p>
+                </div>
+
+                <hr style="margin-bottom: 25px; border: 0; border-top: 1px solid #eee;">
+
+                <form id="addPaymentForm">
+                    <div class="form-group">
+                        <label>ประเภทการชำระเงิน</label>
+                        <select id="payment-type" class="form-input" style="background: #fff;">
+                            <option value="credit-card">บัตรเครดิต / เดบิต</option>
+                            <option value="bank">บัญชีธนาคาร</option>
+                            <option value="e-wallet">แอปจ่ายเงินออนไลน์</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>รายละเอียด</label>
+                        <input type="text" id="payment-detail" class="form-input" placeholder="เช่น **** 4567 หรือ ชื่อธนาคาร" required>
+                    </div>
+                    <button type="submit" class="btn-login" style="background: #222;">
+                        <i class="fa-solid fa-plus"></i> เพิ่มวิธีการชำระเงิน
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+            import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+            import { getFirestore, collection, addDoc, query, where, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+            // *** ตรวจสอบว่า Config ตรงกับของโปรเจกต์คุณ ***
+            const firebaseConfig = {
+                apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
+                authDomain: "vg-shop-c7056.firebaseapp.com",
+                projectId: "vg-shop-c7056",
+                storageBucket: "vg-shop-c7056.firebasestorage.app",
+                messagingSenderId: "630247091832",
+                appId: "1:630247091832:web:d885fe3dfc610501fc478d",
+                measurementId: "G-CDDZVHLC2G"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // เรียกใช้ฟังก์ชันฟังข้อมูลแบบ Real-time
+                    listenToPayments(user.uid);
+                } else {
+                    window.location.href = 'sign.html';
+                }
+            });
+
+            // ฟังก์ชัน Real-time Listener
+            function listenToPayments(uid) {
+                const q = query(collection(db, "payments"), where("userId", "==", uid));
+                
+                // onSnapshot จะทำงานทุกครั้งที่มีการเพิ่มหรือลบข้อมูลใน Database
+                onSnapshot(q, (snapshot) => {
+                    const paymentList = document.getElementById('payment-list');
+                    paymentList.innerHTML = ""; // ล้างหน้าจอเพื่อวาดใหม่
+
+                    if (snapshot.empty) {
+                        paymentList.innerHTML = '<p style="text-align: center; color: #999;">คุณยังไม่มีวิธีการชำระเงิน</p>';
+                        return;
+                    }
+
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        let icon = "fa-credit-card";
+                        if(data.type === "bank") icon = "fa-building-columns";
+                        if(data.type === "e-wallet") icon = "fa-mobile-screen-button";
+
+                        paymentList.innerHTML += `
+                            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: #fff;">
+                                <div>
+                                    <i class="fa-solid ${icon}" style="font-size: 20px; width: 30px;"></i>
+                                    <span style="font-weight: 500;">${data.detail}</span>
+                                </div>
+                                <button onclick="deletePayment('${doc.id}')" style="color: #ff4d4d; background: none; border: none; cursor: pointer;">
+                                    <i class="fa-solid fa-trash-can"></i> ลบ
+                                </button>
+                            </div>
+                        `;
+                    });
+                });
+            }
+
+            // ฟังก์ชันเพิ่มข้อมูลลง Firestore
+            document.getElementById('addPaymentForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const detail = document.getElementById('payment-detail').value;
+                const type = document.getElementById('payment-type').value;
+
+                try {
+                    await addDoc(collection(db, "payments"), {
+                        userId: auth.currentUser.uid,
+                        type: type,
+                        detail: detail,
+                        createdAt: new Date()
+                    });
+                    document.getElementById('payment-detail').value = ""; // ล้างช่องพิมพ์
+                } catch (error) {
+                    alert("เพิ่มข้อมูลไม่สำเร็จ: " + error.message);
+                }
+            });
+
+            // ฟังก์ชันลบข้อมูล
+            window.deletePayment = async (docId) => {
+                if (confirm("คุณแน่ใจหรือไม่ว่าจะลบรายการนี้?")) {
+                    try {
+                        await deleteDoc(doc(db, "payments", docId));
+                        // ไม่ต้อง Refresh หน้าจอ เพราะ onSnapshot จะจัดการให้เอง
+                    } catch (error) {
+                        alert("ลบไม่สำเร็จ: " + error.message);
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
