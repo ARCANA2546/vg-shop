@@ -20,49 +20,52 @@
         <main class="login-section" style="padding: 40px 0;">
             <div class="login-card" style="max-width: 550px; margin: 0 auto;">
                 <h3><i class="fa-solid fa-wallet"></i> จัดการการชำระเงิน</h3>
-                <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">เลือกผูกบัญชีธนาคาร หรือ พร้อมเพย์ เพื่อความสะดวก</p>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">เลือกผูกบัญชีธนาคาร หรือ พร้อมเพย์</p>
                 
                 <div id="payment-list" style="margin-bottom: 30px;">
-                    <p style="text-align: center; color: #999;">กำลัง加โหลดข้อมูล...</p>
+                    <p style="text-align: center; color: #999;">กำลังโหลดข้อมูล...</p>
                 </div>
 
                 <hr style="margin-bottom: 25px; border: 0; border-top: 1px solid #eee;">
 
                 <form id="addPaymentForm">
                     <div class="form-group">
-                        <label>ประเภทการชำระเงิน</label>
+                        <label>ช่องทางการจ่ายเงิน</label>
                         <select id="payment-type" class="form-input" onchange="updateFormFields()" style="background: #fff;">
-                            <option value="bank">ธนาคารออนไลน์</option>
                             <option value="promptpay">พร้อมเพย์ (PromptPay)</option>
+                            <option value="bank">ธนาคารออนไลน์</option>
                         </select>
                     </div>
 
-                    <div id="bank-select-area" class="form-group">
+                    <div id="promptpay-area" style="text-align: center; background: #f0f7ff; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px dashed #0056b3;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0624451412" alt="PromptPay QR Code" style="width: 180px; height: 180px; border-radius: 10px; margin-bottom: 15px;">
+                        <p style="font-weight: 600; color: #0056b3; margin-bottom: 5px;">เบอร์พร้อมเพย์: 062-445-1412</p>
+                        <button type="button" onclick="copyNumber('0624451412')" class="btn-outline" style="font-size: 0.8rem; padding: 5px 15px;">
+                            <i class="fa-solid fa-copy"></i> คัดลอกเบอร์
+                        </button>
+                        <input type="hidden" id="promptpay-number" value="0624451412">
+                    </div>
+
+                    <div id="bank-select-area" class="form-group" style="display: none;">
                         <label>เลือกธนาคาร</label>
                         <select id="bank-name" class="form-input">
-                            <option value="กสิกรไทย (K-Bank)">กสิกรไทย (K-Bank)</option>
-                            <option value="ไทยพาณิชย์ (SCB)">ไทยพาณิชย์ (SCB)</option>
-                            <option value="กรุงไทย (KTB)">กรุงไทย (KTB)</option>
-                            <option value="กรุงเทพ (BBL)">กรุงเทพ (BBL)</option>
+                            <option value="กสิกรไทย">กสิกรไทย (K-Bank)</option>
+                            <option value="ไทยพาณิชย์">ไทยพาณิชย์ (SCB)</option>
+                            <option value="กรุงไทย">กรุงไทย (KTB)</option>
                         </select>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label>เลขที่บัญชี</label>
+                            <input type="text" id="bank-detail" class="form-input" placeholder="xxx-x-xxxxx-x">
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label id="detail-label">เลขที่บัญชี</label>
-                        <input type="text" id="payment-detail" class="form-input" placeholder="กรอกข้อมูล" required>
-                    </div>
-
-                    <div style="background: #fdfdfd; padding: 15px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 20px;">
-                        <label style="font-size: 0.85rem; color: #555;">เพื่อความปลอดภัย โปรดยืนยันตัวตน</label>
-                        <div style="display: flex; gap: 10px; margin-top: 8px;">
-                            <input type="text" id="otp-input" class="form-input" placeholder="รหัส OTP 6 หลัก">
-                            <button type="button" onclick="sendOTP()" class="btn-outline" style="white-space: nowrap; font-size: 0.8rem;">ขอรหัส</button>
-                        </div>
-                        <small style="color: #888;">*ทดลองใช้รหัส: 888888</small>
+                        <label>ชื่อผู้ผูกบัญชี / ชื่อเจ้าของ</label>
+                        <input type="text" id="account-owner" class="form-input" placeholder="ระบุชื่อ-นามสกุล" required>
                     </div>
 
                     <button type="submit" class="btn-login" style="background: #000;">
-                        <i class="fa-solid fa-link"></i> เชื่อมต่อบัญชี
+                        <i class="fa-solid fa-link"></i> ยืนยันการเชื่อมต่อ
                     </button>
                 </form>
             </div>
@@ -87,26 +90,17 @@
             const auth = getAuth(app);
             const db = getFirestore(app);
 
-            // ปรับเปลี่ยนฟิลด์ตามประเภทที่เลือก
-            window.updateFormFields = function() {
-                const type = document.getElementById('payment-type').value;
-                const bankArea = document.getElementById('bank-select-area');
-                const detailLabel = document.getElementById('detail-label');
-                const detailInput = document.getElementById('payment-detail');
-
-                if (type === 'promptpay') {
-                    bankArea.style.display = 'none';
-                    detailLabel.innerText = "เบอร์โทรศัพท์ หรือ เลขบัตรประชาชน";
-                    detailInput.placeholder = "08x-xxx-xxxx";
-                } else {
-                    bankArea.style.display = 'block';
-                    detailLabel.innerText = "เลขที่บัญชี";
-                    detailInput.placeholder = "xxx-x-xxxxx-x";
-                }
+            // ฟังก์ชันคัดลอกเบอร์
+            window.copyNumber = function(number) {
+                navigator.clipboard.writeText(number);
+                alert("คัดลอกเบอร์ " + number + " แล้ว!");
             }
 
-            window.sendOTP = function() {
-                alert("ระบบได้ส่งรหัสยืนยันไปยังเบอร์โทรศัพท์ของคุณแล้ว (รหัสทดสอบ: 888888)");
+            // ปรับการแสดงผลฟอร์ม
+            window.updateFormFields = function() {
+                const type = document.getElementById('payment-type').value;
+                document.getElementById('promptpay-area').style.display = type === 'promptpay' ? 'block' : 'none';
+                document.getElementById('bank-select-area').style.display = type === 'bank' ? 'block' : 'none';
             }
 
             onAuthStateChanged(auth, (user) => {
@@ -122,13 +116,11 @@
                     snapshot.forEach((doc) => {
                         const data = doc.data();
                         const icon = data.type === 'bank' ? 'fa-building-columns' : 'fa-qrcode';
-                        const title = data.type === 'bank' ? data.bankName : 'พร้อมเพย์';
-                        
                         list.innerHTML += `
                             <div style="border: 1px solid #ddd; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: #fff;">
                                 <div>
-                                    <i class="fa-solid ${icon}" style="margin-right: 10px; color: #333;"></i>
-                                    <strong>${title}</strong> <span style="color: #666; margin-left: 10px;">${data.detail}</span>
+                                    <i class="fa-solid ${icon}" style="margin-right: 10px;"></i>
+                                    <strong>${data.title}</strong> <small style="color: #666;">(${data.owner})</small>
                                 </div>
                                 <button onclick="deletePayment('${doc.id}')" style="color: #ff4d4d; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
                             </div>`;
@@ -138,22 +130,27 @@
 
             document.getElementById('addPaymentForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const otp = document.getElementById('otp-input').value;
-                if (otp !== '888888') return alert("รหัส OTP ไม่ถูกต้อง!");
-
                 const type = document.getElementById('payment-type').value;
-                const bankName = document.getElementById('bank-name').value;
-                const detail = document.getElementById('payment-detail').value;
+                const owner = document.getElementById('account-owner').value;
+                
+                let paymentData = {
+                    userId: auth.currentUser.uid,
+                    type: type,
+                    owner: owner,
+                    createdAt: new Date()
+                };
+
+                if (type === 'promptpay') {
+                    paymentData.title = "พร้อมเพย์ 062-445-1412";
+                    paymentData.detail = "0624451412";
+                } else {
+                    paymentData.title = document.getElementById('bank-name').value;
+                    paymentData.detail = document.getElementById('bank-detail').value;
+                }
 
                 try {
-                    await addDoc(collection(db, "payments"), {
-                        userId: auth.currentUser.uid,
-                        type: type,
-                        bankName: type === 'bank' ? bankName : 'PromptPay',
-                        detail: detail,
-                        createdAt: new Date()
-                    });
-                    alert("เชื่อมต่อบัญชีสำเร็จ!");
+                    await addDoc(collection(db, "payments"), paymentData);
+                    alert("บันทึกช่องทางชำระเงินเรียบร้อย!");
                     document.getElementById('addPaymentForm').reset();
                     updateFormFields();
                 } catch (error) {
@@ -162,7 +159,7 @@
             });
 
             window.deletePayment = async (id) => {
-                if (confirm("ต้องการลบบัญชีนี้หรือไม่?")) await deleteDoc(doc(db, "payments", id));
+                if (confirm("ลบช่องทางนี้?")) await deleteDoc(doc(db, "payments", id));
             }
         </script>
     </body>
