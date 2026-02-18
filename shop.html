@@ -54,6 +54,11 @@
                                     <input type="checkbox" name="category" value="booster"> Booster Pack
                                 </label>
                             </li>
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="category" value="character"> Character Deck
+                                </label>
+                            </li>
                         </ul>
                     </div>
                 </aside>
@@ -82,11 +87,11 @@
                             </div>
                         </div>
 
-                        <div class="card product-card product-item" data-category="booster" data-name="Pale Moon">
-                            <img src="img/MOCK_VGG_CD08_0-2048x1713.png" alt="Pale Moon" onerror="this.src='https://via.placeholder.com/300x250?text=Booster'">
+                        <div class="card product-card product-item" data-category="character" data-name="Aichi Sendou Deck">
+                            <img src="https://via.placeholder.com/300x250?text=Character+Deck" alt="Character Deck">
                             <div class="card-body">
-                                <h4>G-CD08: Pale Moon Deck</h4>
-                                <p class="price">฿69</p>
+                                <h4>Character Deck: Aichi Sendou</h4>
+                                <p class="price">฿350</p>
                                 <button class="btn-outline">ดูรายละเอียด</button>
                             </div>
                         </div>
@@ -108,9 +113,9 @@
         </footer>
 
         <script type="module">
-            /* --- Firebase Auth Logic (จากต้นฉบับของคุณ) --- */
+            /* --- Firebase Auth Logic --- */
             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-            import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+            import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
             const firebaseConfig = {
                 apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
@@ -166,6 +171,9 @@
 
             searchInput.addEventListener('input', filterProducts);
             checkboxes.forEach(cb => cb.addEventListener('change', filterProducts));
+            
+            // เรียกใช้ครั้งแรกเพื่อให้นับจำนวนสินค้าตั้งต้น
+            filterProducts();
         </script>
     </body>
 </html>
