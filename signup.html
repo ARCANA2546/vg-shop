@@ -112,30 +112,118 @@
                 <button class="btn-login" onclick="closeModal()" style="margin-top: 20px; width: auto; padding-left: 30px; padding-right: 30px;">ไปหน้าเข้าสู่ระบบทันที</button>
             </div>
         </div>
-        
+
         <script type="module">
             import { supabase } from './supabase-config.js'
 
-            const signupForm = document.querySelector('.sign-up-form');
-            signupForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const username = signupForm.querySelector('input[placeholder="Username"]').value;
-                const email = signupForm.querySelector('input[placeholder="Email"]').value;
-                const password = signupForm.querySelector('input[placeholder="Password"]').value;
+            // ตั้งค่า EmailJS (ใส่ Public Key ของคุณ)
+            emailjs.init("ec8yJSGmW3AwGLnR4");
 
-                // บันทึกลงตาราง User (ที่คุณสร้างไว้ใน Supabase)
+            let generatedOTP = "";
+
+            // 1. ฟังก์ชันส่ง OTP (ผูกกับปุ่ม "ส่งรหัส")
+            window.sendOTP = function() {
+                const email = document.getElementById('email').value;
+                const btn = document.getElementById('btnSendCode');
+
+                if (!email) {
+                    alert("กรุณากรอกอีเมลก่อนครับ");
+                    return;
+                }
+
+                // สุ่มรหัส 6 หลัก
+                generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+                btn.disabled = true;
+                btn.innerText = "กำลังส่ง...";
+
+                // ส่งผ่าน EmailJS
+                // ** อย่าลืมเปลี่ยน YOUR_SERVICE_ID และ YOUR_TEMPLATE_ID **
+                emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                    to_email: email,
+                    otp_code: generatedOTP,
+                })
+                .then(() => {
+                    alert("ส่งรหัสยืนยันไปยังอีเมล " + email + " เรียบร้อยแล้ว!");
+                    document.getElementById('emailHelp').style.display = 'block';
+                    btn.innerText = "ส่งอีกครั้ง";
+                    btn.disabled = false;
+                })
+                .catch((err) => {
+                    alert("เกิดข้อผิดพลาดในการส่งเมล์: " + JSON.stringify(err));
+                    btn.disabled = false;
+                    btn.innerText = "ส่งรหัส";
+                });
+            }
+
+            // 2. ฟังก์ชันจัดการการสมัครสมาชิก (ผูกกับ Form onsubmit)
+            window.handleSignup = async function(event) {
+                event.preventDefault();
+
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const otpInput = document.getElementById('otp').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // ตรวจสอบความถูกต้องเบื้องต้น
+                if (otpInput !== generatedOTP || generatedOTP === "") {
+                    alert("รหัสยืนยัน (OTP) ไม่ถูกต้อง!");
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    alert("รหัสผ่านไม่ตรงกัน!");
+                    return;
+                }
+
+                // แสดงสถานะกำลังโหลด
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                submitBtn.innerText = "กำลังบันทึกข้อมูล...";
+                submitBtn.disabled = true;
+
+                // บันทึกลงตาราง User ใน Supabase
                 const { data, error } = await supabase
                     .from('User')
-                    .insert([{ username, email, password }]);
+                    .insert([
+                        { 
+                            username: username, 
+                            email: email, 
+                            password: password // หมายเหตุ: ในระบบจริงควรใช้การ Hash รหัสผ่าน
+                        }
+                    ]);
 
                 if (error) {
                     alert('สมัครสมาชิกไม่สำเร็จ: ' + error.message);
+                    submitBtn.innerText = "ยืนยันการสมัคร";
+                    submitBtn.disabled = false;
                 } else {
-                    alert('สมัครสมาชิกสำเร็จ!');
-                    window.location.href = 'sign.html';
+                    // เรียกใช้ Modal สำเร็จที่คุณทำไว้
+                    showSuccessModal();
                 }
-            });
+            }
+
+            // ฟังก์ชันจัดการ Modal
+            function showSuccessModal() {
+                const modal = document.getElementById('successModal');
+                modal.style.display = 'flex';
+                
+                let timeLeft = 3;
+                const timerElement = document.getElementById('timer');
+                
+                const countdown = setInterval(() => {
+                    timeLeft--;
+                    timerElement.innerText = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(countdown);
+                        window.location.href = 'sign.html';
+                    }
+                }, 1000);
+            }
+
+            window.closeModal = function() {
+                window.location.href = 'sign.html';
+            }
         </script>
     </body>
 </html>
