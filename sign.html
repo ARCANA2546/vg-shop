@@ -83,14 +83,14 @@
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
-                const email = document.getElementById('loginInput').value;
+                const identifier = document.getElementById('loginInput').value; // ค่าที่กรอก (เมล หรือ ชื่อผู้ใช้)
                 const password = document.getElementById('password').value;
 
-                // ค้นหา User ที่มี email และ password ตรงกัน
+                // แก้ไขคำสั่งค้นหาให้เช็คทั้ง email และ username
                 const { data, error } = await supabase
                     .from('User')
                     .select('*')
-                    .eq('email', email)
+                    .or(`email.eq."${identifier}",username.eq."${identifier}"`) // เช็คทั้งสองคอลัมน์
                     .eq('password', password)
                     .single();
 
