@@ -78,19 +78,19 @@
 
         <script type="module">
             import { supabase } from './supabase-config.js'
-
             const loginForm = document.querySelector('form');
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
-                const identifier = document.getElementById('loginInput').value; // ค่าที่กรอก (เมล หรือ ชื่อผู้ใช้)
+                // identifier คือค่าที่ผู้ใช้กรอก (จะเป็นเมลหรือ username ก็ได้)
+                const identifier = document.getElementById('loginInput').value; 
                 const password = document.getElementById('password').value;
 
-                // แก้ไขคำสั่งค้นหาให้เช็คทั้ง email และ username
+                // ค้นหา User โดยเช็คว่า identifier ตรงกับ email "หรือ" username
                 const { data, error } = await supabase
                     .from('User')
                     .select('*')
-                    .or(`email.eq."${identifier}",username.eq."${identifier}"`) // เช็คทั้งสองคอลัมน์
+                    .or(`email.eq.${identifier},username.eq.${identifier}`) 
                     .eq('password', password)
                     .single();
 
@@ -99,7 +99,8 @@
                     localStorage.setItem('currentUser', JSON.stringify(data));
                     window.location.href = 'index.html';
                 } else {
-                    alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+                    // ถ้าหาไม่เจอ หรือรหัสไม่ตรง
+                    alert('อีเมล หรือ ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง');
                 }
             });
         </script>
