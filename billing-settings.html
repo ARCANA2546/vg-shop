@@ -6,7 +6,6 @@
         <title>เติมเงินเข้าระบบ - VG SHOP</title>
         <link rel="stylesheet" href="styles.css">
         <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <body>
 
@@ -63,38 +62,39 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                // 1. เช็คสถานะ Login
+                // เช็คสถานะจาก LocalStorage
                 const userData = JSON.parse(localStorage.getItem('currentUser'));
                 if (!userData) {
-                    window.location.href = 'sign.html';
+                    window.location.replace('sign.html');
                     return;
                 }
-
-                // แสดงชื่อผู้ใช้ใน Console หรือจุดที่ต้องการ
-                console.log("เข้าใช้งานโดย:", userData.username);
             });
 
-            // ฟังก์ชันคำนวณพอยท์ (1 บาท = 1 พอยท์)
+            // ฟังก์ชันคำนวณพอยท์
             window.calculatePoints = function(amount) {
                 const points = amount ? parseInt(amount) : 0;
-                document.getElementById('received-points').innerText = points.toLocaleString();
+                const display = document.getElementById('received-points');
+                if(display) display.innerText = points.toLocaleString();
             }
 
-            // จัดการการส่งฟอร์มเติมเงิน
-            document.getElementById('topupForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const amount = document.getElementById('topup-amount').value;
-                const slip = document.getElementById('slip-ref').value;
+            // ส่งฟอร์มเติมเงิน
+            const topupForm = document.getElementById('topupForm');
+            if (topupForm) {
+                topupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const amount = document.getElementById('topup-amount').value;
+                    const slip = document.getElementById('slip-ref').value;
 
-                if(!amount || !slip) {
-                    alert("กรุณากรอกข้อมูลให้ครบถ้วน");
-                    return;
-                }
+                    if(!amount || !slip) {
+                        alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+                        return;
+                    }
 
-                alert(`ส่งคำขอเติมเงินจำนวน ${amount} บาท เรียบร้อยแล้ว!\nระบบกำลังตรวจสอบหลักฐานการโอนเงินของคุณ`);
-                document.getElementById('topupForm').reset();
-                document.getElementById('received-points').innerText = "0";
-            });
+                    alert(`ส่งคำขอเติมเงินจำนวน ${amount} บาท เรียบร้อยแล้ว!\nระบบกำลังตรวจสอบหลักฐาน`);
+                    topupForm.reset();
+                    document.getElementById('received-points').innerText = "0";
+                });
+            }
         </script>
     </body>
 </html>

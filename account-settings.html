@@ -6,7 +6,6 @@
         <title>ตั้งค่าบัญชี - VG SHOP</title>
         <link rel="stylesheet" href="styles.css">
         <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <body>
 
@@ -58,35 +57,37 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                // 1. เช็คสถานะ Login
+                // 1. เช็คสถานะจาก LocalStorage เท่านั้น
                 const userData = JSON.parse(localStorage.getItem('currentUser'));
+                
                 if (!userData) {
-                    window.location.href = 'sign.html'; // ถ้าไม่ได้ Login ให้เด้งออก
+                    // ถ้าไม่มีข้อมูลจริงๆ ถึงจะให้ไปหน้า sign
+                    window.location.replace('sign.html'); 
                     return;
                 }
 
-                // 2. แสดงข้อมูลเดิมในช่อง Input
-                document.getElementById('new-username').value = userData.username || '';
-                document.getElementById('profile-photo-url').value = userData.photoURL || '';
+                // 2. นำข้อมูลมาแสดงในช่อง Input
+                if(document.getElementById('new-username')) {
+                    document.getElementById('new-username').value = userData.username || '';
+                }
             });
 
-            // 3. จัดการการบันทึกข้อมูล (จำลองการบันทึก)
-            document.getElementById('settingsForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const newName = document.getElementById('new-username').value;
-                const newPhoto = document.getElementById('profile-photo-url').value;
+            // 3. จัดการการบันทึกข้อมูล
+            const settingsForm = document.getElementById('settingsForm');
+            if (settingsForm) {
+                settingsForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const newName = document.getElementById('new-username').value;
+                    
+                    // อัปเดตข้อมูลใน LocalStorage
+                    const userData = JSON.parse(localStorage.getItem('currentUser'));
+                    userData.username = newName;
+                    localStorage.setItem('currentUser', JSON.stringify(userData));
 
-                // ดึงข้อมูลเก่ามาอัปเดต
-                const userData = JSON.parse(localStorage.getItem('currentUser'));
-                userData.username = newName;
-                userData.photoURL = newPhoto;
-
-                // เซฟกลับลง localStorage (เพื่อให้หน้าอื่นเปลี่ยนตามด้วย)
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-
-                alert("อัปเดตข้อมูลสำเร็จ! (ข้อมูลจะเปลี่ยนในหน้าจอของคุณ)");
-                window.location.href = 'account-info.html';
-            });
+                    alert("อัปเดตข้อมูลเรียบร้อยแล้ว!");
+                    window.location.href = 'account-info.html';
+                });
+            }
         </script>
     </body>
 </html>
