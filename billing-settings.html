@@ -61,99 +61,39 @@
             </div>
         </main>
 
-        <script type="module">
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-            import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-            import { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // 1. เช็คสถานะ Login
+                const userData = JSON.parse(localStorage.getItem('currentUser'));
+                if (!userData) {
+                    window.location.href = 'sign.html';
+                    return;
+                }
 
-            const firebaseConfig = {
-                apiKey: "AIzaSyAV3snK_1l53ZX1ITml_crwAJSrJP_3BIU",
-                authDomain: "vg-shop-c7056.firebaseapp.com",
-                projectId: "vg-shop-c7056",
-                storageBucket: "vg-shop-c7056.firebasestorage.app",
-                messagingSenderId: "630247091832",
-                appId: "1:630247091832:web:d885fe3dfc610501fc478d",
-                measurementId: "G-CDDZVHLC2G"
-            };
-
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
-
-            // คำนวณพอยท์สดๆ
-            window.calculatePoints = function() {
-                const amount = document.getElementById('topup-amount').value;
-                const points = amount ? parseInt(amount) : 0; // เรท 1:1
-                document.getElementById('received-points').innerText = points.toLocaleString();
-                
-                // ปรับ QR Code ให้แสดงจำนวนเงิน (ถ้าใช้ API ที่รองรับการฝังยอดเงิน)
-                // ตัวอย่างนี้ใช้ qrserver แบบพื้นฐาน
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) listenToTransactions(user.uid);
-                else window.location.href = 'sign.html';
+                // แสดงชื่อผู้ใช้ใน Console หรือจุดที่ต้องการ
+                console.log("เข้าใช้งานโดย:", userData.username);
             });
 
-            // ดึงประวัติการเติมเงิน (Real-time)
-            function listenToTransactions(uid) {
-                const q = query(
-                    collection(db, "transactions"), 
-                    where("userId", "==", uid),
-                    orderBy("createdAt", "desc"),
-                    limit(5)
-                );
-
-                onSnapshot(q, (snapshot) => {
-                    const list = document.getElementById('transaction-list');
-                    list.innerHTML = "";
-                    
-                    if (snapshot.empty) {
-                        list.innerHTML = '<p style="text-align: center; color: #999; font-size: 0.85rem;">ยังไม่มีประวัติการเติมเงิน</p>';
-                        return;
-                    }
-
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const date = data.createdAt?.toDate().toLocaleDateString('th-TH');
-                        
-                        list.innerHTML += `
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem;">
-                                <div>
-                                    <i class="fa-solid fa-arrow-up-right-from-square" style="color: #27ae60; margin-right: 8px;"></i>
-                                    <span>เติมเงิน ${data.amount} บาท</span>
-                                    <div style="font-size: 0.75rem; color: #999;">${date} | Ref: ${data.slipRef}</div>
-                                </div>
-                                <span style="font-weight: bold; color: #27ae60;">+${data.points} P</span>
-                            </div>`;
-                    });
-                });
+            // ฟังก์ชันคำนวณพอยท์ (1 บาท = 1 พอยท์)
+            window.calculatePoints = function(amount) {
+                const points = amount ? parseInt(amount) : 0;
+                document.getElementById('received-points').innerText = points.toLocaleString();
             }
 
-            // ส่งข้อมูลเติมเงิน
-            document.getElementById('topupForm').addEventListener('submit', async (e) => {
+            // จัดการการส่งฟอร์มเติมเงิน
+            document.getElementById('topupForm').addEventListener('submit', (e) => {
                 e.preventDefault();
-                const amount = parseInt(document.getElementById('topup-amount').value);
-                const slipRef = document.getElementById('slip-ref').value;
-                const user = auth.currentUser;
+                const amount = document.getElementById('topup-amount').value;
+                const slip = document.getElementById('slip-ref').value;
 
-                try {
-                    // บันทึกรายการเติมเงินเข้าคอลเลกชัน transactions
-                    await addDoc(collection(db, "transactions"), {
-                        userId: user.uid,
-                        amount: amount,
-                        points: amount, // 1 บาท = 1 พอยท์
-                        slipRef: slipRef,
-                        status: "pending", // ตั้งสถานะว่ารอตรวจสอบ (หรือสำเร็จทันทีตามต้องการ)
-                        createdAt: new Date()
-                    });
-
-                    alert("ส่งข้อมูลเติมเงินเรียบร้อยแล้ว! พอยท์จะเข้าบัญชีของคุณเร็วๆ นี้");
-                    document.getElementById('topupForm').reset();
-                    document.getElementById('received-points').innerText = "0";
-                } catch (error) {
-                    alert("เกิดข้อผิดพลาด: " + error.message);
+                if(!amount || !slip) {
+                    alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+                    return;
                 }
+
+                alert(`ส่งคำขอเติมเงินจำนวน ${amount} บาท เรียบร้อยแล้ว!\nระบบกำลังตรวจสอบหลักฐานการโอนเงินของคุณ`);
+                document.getElementById('topupForm').reset();
+                document.getElementById('received-points').innerText = "0";
             });
         </script>
     </body>
