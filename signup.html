@@ -140,7 +140,7 @@
                 // ส่งผ่าน EmailJS
                 // ** อย่าลืมเปลี่ยน YOUR_SERVICE_ID และ YOUR_TEMPLATE_ID **
                 emailjs.send("service_v7ku20q", "template_bqbbmxo", {
-                    to_email: email,
+                    user_email: email,
                     otp_code: generatedOTP,
                 })
                 .then(() => {
