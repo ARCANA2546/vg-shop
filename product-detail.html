@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>รายละเอียดสินค้า - VG SHOP</title>
+        <link rel="stylesheet" href="styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </head>
+
+    <body>
+        <main class="detail-container">
+            <a href="shop.html" style="display: inline-block; margin-bottom: 20px; color: #666; text-decoration: none;">
+                <i class="fa-solid fa-arrow-left"></i> กลับไปหน้าร้านค้า
+            </a>
+
+            <div class="detail-flex">
+                <div class="detail-img">
+                    <img id="p-img" src="" alt="Product Image">
+                </div>
+
+                <div class="detail-info">
+                    <h1 id="p-name">ชื่อสินค้า</h1>
+                    <div id="p-price" class="p-price">฿0</div>
+                    
+                    <p class="p-description">
+                        สินค้าภาษาไทย ของแท้ 100% สภาพสมบูรณ์
+                    </p>
+
+                    <button class="btn-buy" onclick="alert('เพิ่ม ' + document.getElementById('p-name').innerText + ' ลงตะกร้าแล้ว!')">
+                        <i class="fa-solid fa-cart-shopping"></i> สั่งซื้อสินค้า
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            // 1. ดึงข้อมูล Parameters จาก URL
+            const params = new URLSearchParams(window.location.search);
+            
+            // 2. ตรวจสอบว่ามีข้อมูลส่งมาไหม
+            if (params.has('name')) {
+                const name = params.get('name');
+                const price = params.get('price');
+                const img = params.get('img');
+
+                // 3. นำข้อมูลไปแสดงใน HTML ตาม ID ที่ตั้งไว้
+                document.getElementById('p-name').innerText = name;
+                document.getElementById('p-price').innerText = '฿' + price;
+                document.getElementById('p-img').src = img;
+                
+                // เปลี่ยนชื่อหัวข้อบน Browser Tab ด้วย
+                document.title = name + " - VG SHOP";
+            } else {
+                // ถ้าเข้าหน้าโดยไม่มีข้อมูล ให้เด้งกลับหน้า shop
+                window.location.href = 'shop.html';
+            }
+        </script>
+    </body>
+</html>
